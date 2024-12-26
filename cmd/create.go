@@ -31,6 +31,10 @@ Sets up a complete development environment ready for implementing and testing al
 		if err := create.ProjectDir(pId); err != nil {
 			slog.Error(err.Error())
 		}
+
+		if err := create.ProjectMain(pId); err != nil {
+			slog.Error(err.Error())
+		}
 	},
 }
 

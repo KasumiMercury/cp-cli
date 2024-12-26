@@ -2,6 +2,8 @@ package create
 
 import (
 	"fmt"
+	"html/template"
+	"log/slog"
 	"os"
 	"os/exec"
 )
@@ -22,5 +24,28 @@ func ProjectDir(id string) error {
 		return fmt.Errorf("cannot create project directory: %w", err)
 	}
 
+	return nil
+}
+
+func ProjectMain(id string) error {
+	t, err := template.ParseFiles("create/resource/main.tmpl")
+	if err != nil {
+		return fmt.Errorf("cannot parse template: %w", err)
+	}
+
+	f, err := os.Create("./" + id + "/main.go")
+	if err != nil {
+		return fmt.Errorf("cannot create file: %w", err)
+	}
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			slog.Error("cannot close file", "err", err)
+		}
+	}(f)
+
+	if err := t.Execute(f, nil); err != nil {
+		return fmt.Errorf("cannot execute template: %w", err)
+	}
 	return nil
 }
