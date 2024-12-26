@@ -10,14 +10,14 @@ import (
 
 var cmd *exec.Cmd
 
-func ProjectDir(id string) error {
-	err := os.Mkdir("./"+id, os.ModePerm)
+func ProjectDir(pID string) error {
+	err := os.Mkdir("./"+pID, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("cannot create project directory: %w", err)
 	}
 
-	cmd = exec.Command("go", "mod", "init", id)
-	cmd.Dir = "./" + id
+	cmd = exec.Command("go", "mod", "init", pID)
+	cmd.Dir = "./" + pID
 
 	err = cmd.Run()
 	if err != nil {
@@ -27,13 +27,13 @@ func ProjectDir(id string) error {
 	return nil
 }
 
-func ProjectMain(id string) error {
-	t, err := template.ParseFiles("create/resource/main.tmpl")
+func ProjectMain(pID string) error {
+	tmpl, err := template.ParseFiles("create/resource/main.tmpl")
 	if err != nil {
 		return fmt.Errorf("cannot parse template: %w", err)
 	}
 
-	f, err := os.Create("./" + id + "/main.go")
+	genMain, err := os.Create("./" + pID + "/main.go")
 	if err != nil {
 		return fmt.Errorf("cannot create file: %w", err)
 	}
@@ -42,9 +42,9 @@ func ProjectMain(id string) error {
 		if err != nil {
 			slog.Error("cannot close file", "err", err)
 		}
-	}(f)
+	}(genMain)
 
-	if err := t.Execute(f, nil); err != nil {
+	if err := tmpl.Execute(genMain, nil); err != nil {
 		return fmt.Errorf("cannot execute template: %w", err)
 	}
 

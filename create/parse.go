@@ -20,15 +20,15 @@ func (m *parseFuncManage) registerFunc(h string, f func(u *url.URL) (string, err
 	(*m)[h] = f
 }
 
-func (m *parseFuncManage) parse(u *url.URL) (string, error) {
-	pf, ok := (*m)[u.Hostname()]
+func (m *parseFuncManage) parse(target *url.URL) (string, error) {
+	pf, ok := (*m)[target.Hostname()]
 	if !ok {
-		return "", fmt.Errorf("%w: %s", ErrNotSupportedHost, u.Hostname())
+		return "", fmt.Errorf("%w: %s", ErrNotSupportedHost, target.Hostname())
 	}
 
-	res, err := pf(u)
+	res, err := pf(target)
 	if err != nil {
-		return "", fmt.Errorf("%w: %s", err, u.String())
+		return "", fmt.Errorf("%w: %s", err, target.String())
 	}
 
 	return res, nil
@@ -63,16 +63,16 @@ func init() {
 }
 
 func ParseIDFromURL(target string) (string, error) {
-	u, err := url.Parse(target)
+	parsed, err := url.Parse(target)
 	if err != nil {
 		return "", fmt.Errorf("%w: %w", ErrInvalidURL, err)
 	}
 
-	if u.Scheme != "http" && u.Scheme != "https" {
+	if parsed.Scheme != "http" && parsed.Scheme != "https" {
 		return "", fmt.Errorf("%w: scheme must be 'http' or 'https'", ErrInvalidURL)
 	}
 
-	problemID, err := parseFuncMap.parse(u)
+	problemID, err := parseFuncMap.parse(parsed)
 	if err != nil {
 		return "", err
 	}
