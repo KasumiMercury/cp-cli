@@ -30,6 +30,7 @@ func (m *parseFuncManage) parse(u *url.URL) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("%w: %s", err, u.String())
 	}
+
 	return res, nil
 }
 
@@ -43,6 +44,7 @@ func init() {
 			if p[len(p)-2] != "tasks" {
 				return "", fmt.Errorf("%w: can't find tasks", ErrInvalidURL)
 			}
+
 			return p[len(p)-1], nil
 		},
 	)
@@ -54,6 +56,7 @@ func init() {
 			if id == "" {
 				return "", fmt.Errorf("%w: can't find id", ErrInvalidURL)
 			}
+
 			return id, nil
 		},
 	)

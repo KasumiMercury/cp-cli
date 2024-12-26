@@ -47,5 +47,6 @@ func ProjectMain(id string) error {
 	if err := t.Execute(f, nil); err != nil {
 		return fmt.Errorf("cannot execute template: %w", err)
 	}
+
 	return nil
 }
