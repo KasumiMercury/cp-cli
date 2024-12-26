@@ -2,11 +2,17 @@ package create
 
 import (
 	"errors"
+	"fmt"
 	"net/url"
 	"strings"
 )
 
 var parseFuncMap parseFuncManage
+
+var (
+	ErrNotSupportedHost = errors.New("not supported host")
+	ErrInvalidURL       = errors.New("invalid url")
+)
 
 type parseFuncManage map[string]func(u *url.URL) (string, error)
 
@@ -17,12 +23,12 @@ func (m *parseFuncManage) registerFunc(h string, f func(u *url.URL) (string, err
 func (m *parseFuncManage) parse(u *url.URL) (string, error) {
 	pf, ok := (*m)[u.Hostname()]
 	if !ok {
-		return "", errors.New("target host is not supported")
+		return "", fmt.Errorf("%w: %s", ErrNotSupportedHost, u.Hostname())
 	}
 
 	res, err := pf(u)
 	if err != nil {
-		return "", errors.New("invalid url")
+		return "", fmt.Errorf("%w: %s", err, u.String())
 	}
 	return res, nil
 }
@@ -35,7 +41,7 @@ func init() {
 		func(u *url.URL) (string, error) {
 			p := strings.Split(u.Path, "/")
 			if p[len(p)-2] != "tasks" {
-				return "", errors.New("invalid url")
+				return "", fmt.Errorf("%w: can't find tasks", ErrInvalidURL)
 			}
 			return p[len(p)-1], nil
 		},
@@ -46,7 +52,7 @@ func init() {
 		func(u *url.URL) (string, error) {
 			id := u.Query().Get("id")
 			if id == "" {
-				return "", errors.New("invalid id")
+				return "", fmt.Errorf("%w: can't find id", ErrInvalidURL)
 			}
 			return id, nil
 		},
@@ -60,7 +66,7 @@ func ParseIDFromURL(target string) (string, error) {
 	}
 
 	if u.Scheme != "http" && u.Scheme != "https" {
-		return "", errors.New("invalid URL")
+		return "", fmt.Errorf("%w: scheme must be 'http' or 'https'", ErrInvalidURL)
 	}
 
 	problemID, err := parseFuncMap.parse(u)
