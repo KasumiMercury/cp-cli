@@ -65,7 +65,7 @@ func init() {
 func ParseIDFromURL(target string) (string, error) {
 	u, err := url.Parse(target)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %w", ErrInvalidURL, err)
 	}
 
 	if u.Scheme != "http" && u.Scheme != "https" {
