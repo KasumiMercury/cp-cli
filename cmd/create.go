@@ -5,14 +5,15 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
+
 	"github.com/KasumiMercury/cp-cli/create"
 	"github.com/spf13/cobra"
-	"log/slog"
 )
 
 var targetUrl string
 
-// createCmd represents the create command
+// createCmd represents the create command.
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new Go project directory",
