@@ -27,7 +27,10 @@ Sets up a complete development environment ready for implementing and testing al
 		}
 
 		fmt.Println(pId)
-		// TODO: create project dir
+
+		if err := create.ProjectDir(pId); err != nil {
+			slog.Error(err.Error())
+		}
 	},
 }
 
