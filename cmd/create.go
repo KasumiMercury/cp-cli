@@ -5,9 +5,12 @@ package cmd
 
 import (
 	"fmt"
-
+	"github.com/KasumiMercury/cp-cli/create"
 	"github.com/spf13/cobra"
+	"log/slog"
 )
+
+var targetUrl string
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
@@ -18,7 +21,13 @@ Creates essential files and folders including main solution file, test cases dir
 
 Sets up a complete development environment ready for implementing and testing algorithmic solutions.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
+		pId, err := create.ParseIdFromUrl(targetUrl)
+		if err != nil {
+			slog.Error(err.Error())
+		}
+
+		fmt.Println(pId)
+		// TODO: create project dir
 	},
 }
 
@@ -34,4 +43,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	createCmd.Flags().StringVarP(&targetUrl, "target", "t", "", "Target URL")
 }
