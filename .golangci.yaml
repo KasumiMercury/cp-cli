@@ -1,0 +1,15 @@
+linters:
+  enable-all: true
+  disable:
+    - gosmopolitan
+    - wsl
+    - forbidigo
+    - gochecknoglobals
+    - depguard
+    - gomnd # deprecated
+    - exportloopref # deprecated
+    - execinquery # deprecated
+
+    # on hold
+    - gochecknoinits
+    - exhaustruct
