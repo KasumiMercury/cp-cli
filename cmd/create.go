@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var targetUrl string
+var targetURL string
 
 // createCmd represents the create command.
 var createCmd = &cobra.Command{
@@ -21,19 +21,19 @@ var createCmd = &cobra.Command{
 Creates essential files and folders including main solution file, test cases directory, and template code.
 
 Sets up a complete development environment ready for implementing and testing algorithmic solutions.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		pId, err := create.ParseIdFromUrl(targetUrl)
+	Run: func(_ *cobra.Command, _ []string) {
+		pID, err := create.ParseIDFromURL(targetURL)
 		if err != nil {
 			slog.Error(err.Error())
 		}
 
-		fmt.Println(pId)
+		fmt.Println(pID)
 
-		if err := create.ProjectDir(pId); err != nil {
+		if err := create.ProjectDir(pID); err != nil {
 			slog.Error(err.Error())
 		}
 
-		if err := create.ProjectMain(pId); err != nil {
+		if err := create.ProjectMain(pID); err != nil {
 			slog.Error(err.Error())
 		}
 	},
@@ -51,5 +51,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	createCmd.Flags().StringVarP(&targetUrl, "target", "t", "", "Target URL")
+	createCmd.Flags().StringVarP(&targetURL, "target", "t", "", "Target URL")
 }

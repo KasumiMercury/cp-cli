@@ -28,7 +28,7 @@ Features include project templating, test case management, and rapid code genera
 - making it an essential tool for competitive programmers of all skill levels.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Println("cp-cli called")
 	},
 }

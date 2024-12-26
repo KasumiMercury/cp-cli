@@ -53,7 +53,7 @@ func init() {
 	)
 }
 
-func ParseIdFromUrl(target string) (string, error) {
+func ParseIDFromURL(target string) (string, error) {
 	u, err := url.Parse(target)
 	if err != nil {
 		return "", err
@@ -63,10 +63,10 @@ func ParseIdFromUrl(target string) (string, error) {
 		return "", errors.New("invalid URL")
 	}
 
-	problemId, err := parseFuncMap.parse(u)
+	problemID, err := parseFuncMap.parse(u)
 	if err != nil {
 		return "", err
 	}
 
-	return problemId, nil
+	return problemID, nil
 }
