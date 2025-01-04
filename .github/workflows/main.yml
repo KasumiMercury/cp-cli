@@ -61,6 +61,6 @@ jobs:
           github_token: ${{ github.token }}
           go_version: ${{ env.GO_VERSION }}
           level: warning
-          golangci_lint_flags: "--config=.golangci.yml"
+          golangci_lint_flags: "--config=.golangci.yaml"
           filter_mode: diff_context
           reporter: github-pr-review
