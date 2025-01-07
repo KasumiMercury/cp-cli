@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/KasumiMercury/cp-cli/edit"
 	"log/slog"
 
 	"github.com/KasumiMercury/cp-cli/create"
@@ -33,7 +34,12 @@ Sets up a complete development environment ready for implementing and testing al
 			slog.Error(err.Error())
 		}
 
-		if err := create.ProjectMain(pID); err != nil {
+		genPath, err := create.ProjectMain(pID)
+		if err != nil {
+			slog.Error(err.Error())
+		}
+
+		if err := edit.OpenEditor(genPath); err != nil {
 			slog.Error(err.Error())
 		}
 	},
