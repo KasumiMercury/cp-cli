@@ -1,7 +1,9 @@
 package create
 
 import (
+	"errors"
 	"fmt"
+
 	"github.com/KasumiMercury/cp-cli/edit"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +18,7 @@ Creates essential files and folders including main solution file, test cases dir
 Sets up a complete development environment ready for implementing and testing algorithmic solutions.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 1 {
-				return fmt.Errorf("create command expects 1 argument")
+				return errors.New("create command expects 1 argument")
 			}
 
 			targetURL := args[0]
