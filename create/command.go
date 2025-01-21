@@ -14,11 +14,12 @@ func NewCmd() *cobra.Command {
 Creates essential files and folders including main solution file, test cases directory, and template code.
 
 Sets up a complete development environment ready for implementing and testing algorithmic solutions.`,
-		RunE: func(cmd *cobra.Command, _ []string) error {
-			targetURL, err := cmd.Flags().GetString("target")
-			if err != nil {
-				return fmt.Errorf("failed to get target URL: %w", err)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) != 1 {
+				return fmt.Errorf("create command expects 1 argument")
 			}
+
+			targetURL := args[0]
 
 			cmd.Printf("Target URL: %s\n", targetURL)
 
@@ -44,11 +45,6 @@ Sets up a complete development environment ready for implementing and testing al
 
 			return nil
 		},
-	}
-
-	createCmd.Flags().StringP("target", "t", "", "target URL")
-	if err := createCmd.MarkFlagRequired("target"); err != nil {
-		panic("failed to mark flag 'target'" + err.Error())
 	}
 
 	return createCmd
