@@ -6,9 +6,7 @@ linters:
     - forbidigo
     - gochecknoglobals
     - depguard
-    - gomnd # deprecated
     - exportloopref # deprecated
-    - execinquery # deprecated
 
     # on hold
     - gochecknoinits
