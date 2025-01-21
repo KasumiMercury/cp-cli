@@ -1,6 +1,10 @@
 package create
 
-import "github.com/spf13/viper"
+import (
+	"fmt"
+
+	"github.com/spf13/viper"
+)
 
 func MemoryCurrentProject(pID string, site string) error {
 	current := map[string]string{
@@ -11,7 +15,7 @@ func MemoryCurrentProject(pID string, site string) error {
 	viper.Set("current_project", current)
 
 	if err := viper.WriteConfig(); err != nil {
-		return err
+		return fmt.Errorf("failed to write config: %w", err)
 	}
 
 	return nil
