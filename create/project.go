@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 var cmd *exec.Cmd
@@ -27,15 +28,16 @@ func ProjectDir(pID string) error {
 	return nil
 }
 
-func ProjectMain(pID string) error {
+func ProjectMain(pID string) (string, error) {
 	tmpl, err := template.ParseFiles("create/resource/main.tmpl")
 	if err != nil {
-		return fmt.Errorf("cannot parse template: %w", err)
+		return "", fmt.Errorf("cannot parse template: %w", err)
 	}
 
-	genMain, err := os.Create("./" + pID + "/main.go")
+	genMainPath := filepath.Join("./"+pID, "main.go")
+	genMain, err := os.Create(genMainPath)
 	if err != nil {
-		return fmt.Errorf("cannot create file: %w", err)
+		return "", fmt.Errorf("cannot create file: %w", err)
 	}
 	defer func(f *os.File) {
 		err := f.Close()
@@ -45,8 +47,8 @@ func ProjectMain(pID string) error {
 	}(genMain)
 
 	if err := tmpl.Execute(genMain, nil); err != nil {
-		return fmt.Errorf("cannot execute template: %w", err)
+		return "", fmt.Errorf("cannot execute template: %w", err)
 	}
 
-	return nil
+	return genMainPath, nil
 }
