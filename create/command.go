@@ -39,6 +39,15 @@ Sets up a complete development environment ready for implementing and testing al
 				return fmt.Errorf("failed to create main.go: %w", err)
 			}
 
+			isCreateOnly, err := cmd.Flags().GetBool("create-only")
+			if err != nil {
+				return fmt.Errorf("failed to get 'create-only' flag: %w", err)
+			}
+
+			if isCreateOnly {
+				return nil
+			}
+
 			if err := edit.OpenEditor(genPath); err != nil {
 				return fmt.Errorf("failed to open editor: %w", err)
 			}
@@ -46,6 +55,8 @@ Sets up a complete development environment ready for implementing and testing al
 			return nil
 		},
 	}
+
+	createCmd.Flags().BoolP("create-only", "c", false, "only create project directory")
 
 	return createCmd
 }
