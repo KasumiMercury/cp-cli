@@ -2,10 +2,15 @@ package create
 
 import "github.com/spf13/viper"
 
-func MemoryCurrentProject(pID string) error {
-	viper.Set("CURRENT_PROBLEM", pID)
+func MemoryCurrentProject(pID string, site string) error {
+	current := map[string]string{
+		"id":   pID,
+		"site": site,
+	}
 
-	if err := viper.SafeWriteConfig(); err != nil {
+	viper.Set("current_project", current)
+
+	if err := viper.WriteConfig(); err != nil {
 		return err
 	}
 

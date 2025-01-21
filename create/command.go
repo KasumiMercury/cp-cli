@@ -39,7 +39,8 @@ Sets up a complete development environment ready for implementing and testing al
 				return fmt.Errorf("failed to create main.go: %w", err)
 			}
 
-			if err := MemoryCurrentProject(pID); err != nil {
+			// TODO: set site
+			if err := MemoryCurrentProject(pID, ""); err != nil {
 				return fmt.Errorf("failed to create memory project: %w", err)
 			}
 
