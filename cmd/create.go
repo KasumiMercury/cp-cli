@@ -5,10 +5,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/KasumiMercury/cp-cli/edit"
 	"log/slog"
 
 	"github.com/KasumiMercury/cp-cli/create"
+	"github.com/KasumiMercury/cp-cli/edit"
 	"github.com/spf13/cobra"
 )
 
