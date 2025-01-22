@@ -25,7 +25,7 @@ Sets up a complete development environment ready for implementing and testing al
 
 			cmd.Printf("Target URL: %s\n", targetURL)
 
-			pID, err := ParseIDFromURL(targetURL)
+			pID, _, err := ParseIDFromURL(targetURL)
 			if err != nil {
 				return fmt.Errorf("failed to parse target URL: %w", err)
 			}
