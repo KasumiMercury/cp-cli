@@ -18,7 +18,7 @@ func OpenEditor(targetPath string) error {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("cannot open %s with %s: %w", targetPath, editor, err)
+		return fmt.Errorf("editor could not be opened: %w", err)
 	}
 
 	return nil
