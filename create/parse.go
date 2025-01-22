@@ -16,22 +16,24 @@ var (
 
 type parseFuncManage map[string]func(u *url.URL) (string, error)
 
-func (m *parseFuncManage) registerFunc(h string, f func(u *url.URL) (string, error)) {
-	(*m)[h] = f
+func (m *parseFuncManage) registerFunc(host string, f func(u *url.URL) (string, error)) {
+	(*m)[host] = f
 }
 
 func (m *parseFuncManage) parse(target *url.URL) (string, string, error) {
-	pf, ok := (*m)[target.Hostname()]
+	host := target.Hostname()
+
+	prseFunc, ok := (*m)[host]
 	if !ok {
 		return "", "", fmt.Errorf("%w: %s", ErrNotSupportedHost, target.Hostname())
 	}
 
-	res, err := pf(target)
+	res, err := prseFunc(target)
 	if err != nil {
 		return "", "", fmt.Errorf("%w: %s", err, target.String())
 	}
 
-	return res, target.Hostname(), nil
+	return res, host, nil
 }
 
 func init() {
