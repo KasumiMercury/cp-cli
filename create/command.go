@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/KasumiMercury/cp-cli/edit"
+	"github.com/KasumiMercury/cp-cli/parse"
 	"github.com/spf13/cobra"
 )
 
@@ -27,9 +28,9 @@ Sets up a complete development environment ready for implementing and testing al
 
 			cmd.Printf("Target URL: %s\n", targetURL)
 
-			pID, _, err := ParseIDFromURL(targetURL)
+			pID, _, err := parse.IDFromURL(targetURL)
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to parse target URL: %w", err)
 			}
 
 			cmd.Printf("detected Project ID: %s\n", pID)

@@ -1,4 +1,4 @@
-package create
+package parse
 
 import (
 	"errors"
@@ -64,7 +64,7 @@ func init() {
 	)
 }
 
-func ParseIDFromURL(target string) (string, string, error) {
+func IDFromURL(target string) (string, string, error) {
 	parsed, err := url.Parse(target)
 	if err != nil {
 		return "", "", fmt.Errorf("%w: %w", ErrInvalidURL, err)
