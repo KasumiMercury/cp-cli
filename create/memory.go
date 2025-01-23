@@ -15,7 +15,7 @@ func MemoryCurrentProject(pID string, site string) error {
 	viper.Set("current_project", current)
 
 	if err := viper.WriteConfig(); err != nil {
-		return fmt.Errorf("failed to write config: %w", err)
+		return fmt.Errorf("cannot write config: %w", err)
 	}
 
 	return nil

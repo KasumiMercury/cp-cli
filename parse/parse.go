@@ -1,4 +1,4 @@
-package create
+package parse
 
 import (
 	"errors"
@@ -16,22 +16,24 @@ var (
 
 type parseFuncManage map[string]func(u *url.URL) (string, error)
 
-func (m *parseFuncManage) registerFunc(h string, f func(u *url.URL) (string, error)) {
-	(*m)[h] = f
+func (m *parseFuncManage) registerFunc(host string, f func(u *url.URL) (string, error)) {
+	(*m)[host] = f
 }
 
-func (m *parseFuncManage) parse(target *url.URL) (string, error) {
-	pf, ok := (*m)[target.Hostname()]
+func (m *parseFuncManage) parse(target *url.URL) (string, string, error) {
+	host := target.Hostname()
+
+	prseFunc, ok := (*m)[host]
 	if !ok {
-		return "", fmt.Errorf("%w: %s", ErrNotSupportedHost, target.Hostname())
+		return "", "", fmt.Errorf("%w: %s", ErrNotSupportedHost, target.Hostname())
 	}
 
-	res, err := pf(target)
+	res, err := prseFunc(target)
 	if err != nil {
-		return "", fmt.Errorf("%w: %s", err, target.String())
+		return "", "", fmt.Errorf("%w: %s", err, target.String())
 	}
 
-	return res, nil
+	return res, host, nil
 }
 
 func init() {
@@ -62,20 +64,20 @@ func init() {
 	)
 }
 
-func ParseIDFromURL(target string) (string, error) {
+func IDFromURL(target string) (string, string, error) {
 	parsed, err := url.Parse(target)
 	if err != nil {
-		return "", fmt.Errorf("%w: %w", ErrInvalidURL, err)
+		return "", "", fmt.Errorf("%w: %w", ErrInvalidURL, err)
 	}
 
 	if parsed.Scheme != "http" && parsed.Scheme != "https" {
-		return "", fmt.Errorf("%w: scheme must be 'http' or 'https'", ErrInvalidURL)
+		return "", "", fmt.Errorf("%w: scheme must be 'http' or 'https'", ErrInvalidURL)
 	}
 
-	problemID, err := parseFuncMap.parse(parsed)
+	problemID, host, err := parseFuncMap.parse(parsed)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return problemID, nil
+	return problemID, host, nil
 }

@@ -1,12 +1,17 @@
 package edit
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
-func OpenEditor(targetPath string) error {
+var ErrFailedOpenEditor = errors.New("failed to open editor")
+
+func OpenEditor(targetDir string, targetFile string) error {
+	targetPath := filepath.Join(targetDir, targetFile)
+
 	editor := os.Getenv("EDITOR")
 	if editor == "" {
 		editor = "vim"
@@ -18,7 +23,7 @@ func OpenEditor(targetPath string) error {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("cannot open %s with %s: %w", targetPath, editor, err)
+		return ErrFailedOpenEditor
 	}
 
 	return nil
