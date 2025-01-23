@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -46,15 +45,14 @@ func projectMain(path string) error {
 	if err != nil {
 		return fmt.Errorf("%w(%s): %w", ErrFailedCreateProject, "main.go", err)
 	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			slog.Error("cannot close file", "err", err)
-		}
-	}(genMain)
+	defer genMain.Close()
 
 	if err := tmpl.Execute(genMain, nil); err != nil {
 		return fmt.Errorf("%w(%s): %w", ErrFailedCreateProject, "execute template", err)
+	}
+
+	if err := genMain.Sync(); err != nil {
+		return fmt.Errorf("%w: failed to sync %s: %w", ErrFailedCreateProject, "main.go", err)
 	}
 
 	return nil
