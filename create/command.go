@@ -6,6 +6,7 @@ import (
 
 	"github.com/KasumiMercury/cp-cli/edit"
 	"github.com/KasumiMercury/cp-cli/parse"
+	"github.com/KasumiMercury/cp-cli/path"
 	"github.com/spf13/cobra"
 )
 
@@ -35,12 +36,12 @@ Sets up a complete development environment ready for implementing and testing al
 
 			cmd.Printf("detected Project ID: %s\n", pID)
 
-			if err := ProjectDir(pID); err != nil {
-				return err
+			projectPath, err := path.ProjectDirPath("./", pID)
+			if err != nil {
+				return fmt.Errorf("failed to get project dir: %w", err)
 			}
 
-			genPath, err := ProjectMain(pID)
-			if err != nil {
+			if err := ProjectDir(projectPath, pID); err != nil {
 				return err
 			}
 
@@ -58,7 +59,7 @@ Sets up a complete development environment ready for implementing and testing al
 				return nil
 			}
 
-			if err := edit.OpenEditor(genPath); err != nil {
+			if err := edit.OpenEditor(projectPath, "main.go"); err != nil {
 				return fmt.Errorf("failed open editor: %w", err)
 			}
 

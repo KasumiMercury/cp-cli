@@ -4,11 +4,14 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 var ErrFailedOpenEditor = errors.New("failed to open editor")
 
-func OpenEditor(targetPath string) error {
+func OpenEditor(targetDir string, targetFile string) error {
+	targetPath := filepath.Join(targetDir, targetFile)
+
 	editor := os.Getenv("EDITOR")
 	if editor == "" {
 		editor = "vim"
