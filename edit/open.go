@@ -1,10 +1,12 @@
 package edit
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"os/exec"
 )
+
+var ErrFailedOpenEditor = errors.New("failed to open editor")
 
 func OpenEditor(targetPath string) error {
 	editor := os.Getenv("EDITOR")
@@ -18,7 +20,7 @@ func OpenEditor(targetPath string) error {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("editor could not be opened: %w", err)
+		return ErrFailedOpenEditor
 	}
 
 	return nil
