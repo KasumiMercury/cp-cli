@@ -56,11 +56,15 @@ func TestIDFromURL(t *testing.T) {
 			true,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			got, got1, err := IDFromURL(tt.args.target)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("IDFromURL() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 			if got != tt.want {

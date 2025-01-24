@@ -7,6 +7,8 @@ import (
 )
 
 func TestProjectDir(t *testing.T) {
+	t.Parallel()
+
 	tempDir := t.TempDir()
 	projectDir := filepath.Join(tempDir, "temp")
 	problemID := "example_id"
@@ -21,6 +23,8 @@ func TestProjectDir(t *testing.T) {
 }
 
 func Test_projectMain(t *testing.T) {
+	t.Parallel()
+
 	tempDir := t.TempDir()
 
 	if err := projectMain(tempDir); err != nil {

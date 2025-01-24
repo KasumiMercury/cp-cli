@@ -10,6 +10,8 @@ import (
 )
 
 func TestMemoryCurrentProject(t *testing.T) {
+	t.Parallel()
+
 	tempDir := t.TempDir()
 	viper.AddConfigPath(tempDir)
 	viper.SetConfigType("yaml")
