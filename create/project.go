@@ -1,6 +1,7 @@
 package create
 
 import (
+	_ "embed"
 	"errors"
 	"fmt"
 	"html/template"
@@ -34,8 +35,11 @@ func ProjectDir(path string, problemID string) error {
 	return nil
 }
 
+//go:embed resource/main.tmpl
+var mainTmpl string
+
 func projectMain(path string) error {
-	tmpl, err := template.ParseFiles("create/resource/main.tmpl")
+	tmpl, err := template.New("main").Parse(mainTmpl)
 	if err != nil {
 		panic("failed to parse template")
 	}
