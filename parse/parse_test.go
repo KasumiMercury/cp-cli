@@ -3,6 +3,8 @@ package parse
 import "testing"
 
 func TestIDFromURL(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		target string
 	}
