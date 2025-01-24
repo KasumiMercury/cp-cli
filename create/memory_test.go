@@ -1,11 +1,12 @@
 package create
 
 import (
-	"github.com/spf13/viper"
 	"os"
 	"path"
 	"reflect"
 	"testing"
+
+	"github.com/spf13/viper"
 )
 
 func TestMemoryCurrentProject(t *testing.T) {
@@ -32,5 +33,4 @@ func TestMemoryCurrentProject(t *testing.T) {
 	if !reflect.DeepEqual(actualCurrentProject, wantCurrent) {
 		t.Errorf("current_project = %v, want %v", actualCurrentProject, wantCurrent)
 	}
-
 }
