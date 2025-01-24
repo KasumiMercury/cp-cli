@@ -14,9 +14,13 @@ linters:
     # on hold
     - gochecknoinits
     - exhaustruct
+    - testpackage
 
 linters-settings:
   varnamelen:
+    ignore-names:
+      - err
+      - tt
     ignore-decls:
       - t testing.T
       - e error
