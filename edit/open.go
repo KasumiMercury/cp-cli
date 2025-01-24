@@ -2,6 +2,7 @@ package edit
 
 import (
 	"errors"
+	"github.com/spf13/viper"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,7 +13,7 @@ var ErrFailedOpenEditor = errors.New("failed to open editor")
 func OpenEditor(targetDir string, targetFile string) error {
 	targetPath := filepath.Join(targetDir, targetFile)
 
-	editor := os.Getenv("EDITOR")
+	editor := viper.GetString("editor")
 	if editor == "" {
 		editor = "vim"
 	}
