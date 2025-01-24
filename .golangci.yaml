@@ -14,3 +14,15 @@ linters:
     # on hold
     - gochecknoinits
     - exhaustruct
+
+linters-settings:
+  varnamelen:
+    ignore-decls:
+      - t testing.T
+      - e error
+
+issues:
+  exclude-rules:
+    - path: _test.go
+      linters:
+        - funlen
