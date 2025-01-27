@@ -15,7 +15,7 @@ var cmd *exec.Cmd
 var ErrFailedCreateProject = errors.New("failed to create project")
 
 func ProjectDir(path string, problemID string) error {
-	err := os.Mkdir(path, os.ModePerm)
+	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("%w(%s): %w", ErrFailedCreateProject, "directory", err)
 	}

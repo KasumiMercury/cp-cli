@@ -35,7 +35,10 @@ Sets up a complete development environment ready for implementing and testing al
 
 			cmd.Printf("detected Project ID: %s\n", pID)
 
-			projectPath, err := path.ProjectDirPath("./", pID)
+			// TODO: use config
+			projectRoot := "./project"
+
+			projectPath, err := path.ProjectDirPath(projectRoot, pID)
 			if err != nil {
 				return fmt.Errorf("failed to get project dir: %w", err)
 			}
