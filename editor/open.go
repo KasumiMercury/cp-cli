@@ -1,14 +1,13 @@
-package edit
+package editor
 
 import (
-	"errors"
 	"github.com/spf13/viper"
 	"os"
 	"os/exec"
 	"path/filepath"
 )
 
-var ErrFailedOpenEditor = errors.New("failed to open editor")
+//var ErrFailedOpenEditor = errors.New("failed to open editor")
 
 func OpenEditor(targetDir string, targetFile string) error {
 	targetPath := filepath.Join(targetDir, targetFile)
