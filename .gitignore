@@ -29,3 +29,6 @@ go.work.sum
 
 # generated config file
 .cp-cli.yaml
+
+# for dev
+project/
