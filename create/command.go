@@ -3,8 +3,7 @@ package create
 import (
 	"errors"
 	"fmt"
-
-	"github.com/KasumiMercury/cp-cli/edit"
+	"github.com/KasumiMercury/cp-cli/editor"
 	"github.com/KasumiMercury/cp-cli/parse"
 	"github.com/KasumiMercury/cp-cli/path"
 	"github.com/spf13/cobra"
@@ -59,8 +58,9 @@ Sets up a complete development environment ready for implementing and testing al
 				return nil
 			}
 
-			if err := edit.OpenEditor(projectPath, "main.go"); err != nil {
-				return fmt.Errorf("failed open editor: %w", err)
+			// TODO: other editor
+			if err := editor.Open("nvim", projectPath, "main.go", cmd.InOrStdin(), cmd.OutOrStdout(), cmd.OutOrStderr()); err != nil {
+				return fmt.Errorf("failed to open editor: %w", err)
 			}
 
 			return nil
