@@ -8,8 +8,6 @@ linters:
     - depguard
     - godox
     - exportloopref # deprecated
-    - gomnd # deprecated
-    - execinquery # deprecated
 
     # on hold
     - gochecknoinits
