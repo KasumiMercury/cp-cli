@@ -63,7 +63,10 @@ Sets up a complete development environment ready for implementing and testing al
 			}
 
 			// TODO: other editor
-			if err := editor.Open("nvim", projectPath, "main.go", cmd.InOrStdin(), cmd.OutOrStdout(), cmd.OutOrStderr()); err != nil {
+			if err := editor.Open(
+				"nvim", projectPath, "main.go",
+				cmd.InOrStdin(), cmd.OutOrStdout(), cmd.OutOrStderr(),
+			); err != nil {
 				return fmt.Errorf("failed to open editor: %w", err)
 			}
 
