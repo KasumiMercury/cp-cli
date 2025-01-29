@@ -1,9 +1,10 @@
 package config
 
 import (
-	"github.com/spf13/viper"
 	"os"
 	"runtime"
+
+	"github.com/spf13/viper"
 )
 
 var defaultEditor = ""
@@ -11,6 +12,7 @@ var defaultEditor = ""
 func init() {
 	if c := viper.GetString("EDITOR"); c != "" {
 		defaultEditor = c
+
 		return
 	}
 

@@ -2,11 +2,12 @@ package editor
 
 import (
 	"errors"
-	"github.com/KasumiMercury/cp-cli/config"
 	"io"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/KasumiMercury/cp-cli/config"
 )
 
 var (
