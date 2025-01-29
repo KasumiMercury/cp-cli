@@ -6,6 +6,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/KasumiMercury/cp-cli/config"
 )
 
 var (
@@ -16,6 +18,10 @@ var (
 func Open(editorCmd string, targetDir string, targetFile string,
 	stdin io.Reader, stdout io.Writer, stderr io.Writer,
 ) error {
+	if editorCmd == "" {
+		editorCmd = config.GetDefaultEditor()
+	}
+
 	if len(editorCmd) == 0 {
 		return ErrInvalidCommand
 	}
