@@ -29,45 +29,9 @@ Sets up a complete development environment ready for implementing and testing al
 
 			cmd.Printf("Target URL: %s\n", targetURL)
 
-			pID, _, err := parse.IDFromURL(targetURL)
+			err := createCmd(cmd, targetURL)
 			if err != nil {
-				return fmt.Errorf("failed to parse target URL: %w", err)
-			}
-
-			cmd.Printf("detected Project ID: %s\n", pID)
-
-			// TODO: use config
-			projectRoot := "./project"
-
-			projectPath, err := path.ProjectDirPath(projectRoot, pID)
-			if err != nil {
-				return fmt.Errorf("failed to get project dir: %w", err)
-			}
-
-			if err := ProjectDir(projectPath, pID); err != nil {
 				return err
-			}
-
-			// TODO: set site
-			if err := MemoryCurrentProject(pID, ""); err != nil {
-				return fmt.Errorf("failed memory current problem: %w", err)
-			}
-
-			isCreateOnly, err := cmd.Flags().GetBool("create-only")
-			if err != nil {
-				return fmt.Errorf("failed flag get create-only value: %w", err)
-			}
-
-			if isCreateOnly {
-				return nil
-			}
-
-			// TODO: other editor
-			if err := editor.Open(
-				"nvim", projectPath, "main.go",
-				cmd.InOrStdin(), cmd.OutOrStdout(), cmd.OutOrStderr(),
-			); err != nil {
-				return fmt.Errorf("failed to open editor: %w", err)
 			}
 
 			return nil
@@ -77,4 +41,49 @@ Sets up a complete development environment ready for implementing and testing al
 	createCmd.Flags().BoolP("create-only", "c", false, "only create project directory")
 
 	return createCmd
+}
+
+func createCmd(cmd *cobra.Command, targetURL string) error {
+	pID, _, err := parse.IDFromURL(targetURL)
+	if err != nil {
+		return fmt.Errorf("failed to parse target URL: %w", err)
+	}
+
+	cmd.Printf("detected Project ID: %s\n", pID)
+
+	// TODO: use config
+	projectRoot := "./project"
+
+	projectPath, err := path.ProjectDirPath(projectRoot, pID)
+	if err != nil {
+		return fmt.Errorf("failed to get project dir: %w", err)
+	}
+
+	if err := ProjectDir(projectPath, pID); err != nil {
+		return err
+	}
+
+	// TODO: set site
+	if err := MemoryCurrentProject(pID, ""); err != nil {
+		return fmt.Errorf("failed memory current problem: %w", err)
+	}
+
+	isCreateOnly, err := cmd.Flags().GetBool("create-only")
+	if err != nil {
+		return fmt.Errorf("failed flag get create-only value: %w", err)
+	}
+
+	if isCreateOnly {
+		return nil
+	}
+
+	// TODO: other editor
+	if err := editor.Open(
+		"nvim", projectPath, "main.go",
+		cmd.InOrStdin(), cmd.OutOrStdout(), cmd.OutOrStderr(),
+	); err != nil {
+		return fmt.Errorf("failed to open editor: %w", err)
+	}
+
+	return nil
 }
