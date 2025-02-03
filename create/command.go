@@ -77,9 +77,8 @@ func createCmd(cmd *cobra.Command, targetURL string) error {
 		return nil
 	}
 
-	// TODO: other editor
 	if err := editor.Open(
-		"nvim", projectPath, "main.go",
+		"", projectPath, "main.go",
 		cmd.InOrStdin(), cmd.OutOrStdout(), cmd.OutOrStderr(),
 	); err != nil {
 		return fmt.Errorf("failed to open editor: %w", err)
