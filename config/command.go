@@ -1,6 +1,9 @@
 package config
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/KasumiMercury/cp-cli/config/show"
+	"github.com/spf13/cobra"
+)
 
 func NewCmd() *cobra.Command {
 	configCmd := &cobra.Command{
@@ -8,10 +11,11 @@ func NewCmd() *cobra.Command {
 		Short: "Manage configuration",
 		Long:  "Manage configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			//TODO: implement
 			return nil
 		},
 	}
+
+	configCmd.AddCommand(show.NewCmd())
 
 	return configCmd
 }
