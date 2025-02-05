@@ -1,8 +1,9 @@
 package option
 
 import (
-	"github.com/spf13/viper"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 type OptionKey string
@@ -26,7 +27,8 @@ var Options = map[OptionKey]Item{
 			}
 
 			return v
-		}},
+		},
+	},
 	ProjectDirKey: {
 		String: func() string {
 			v := viper.GetString("project_dir")
@@ -35,7 +37,8 @@ var Options = map[OptionKey]Item{
 			}
 
 			return v
-		}},
+		},
+	},
 	CurrentProjectKey: {
 		String: func() string {
 			project := viper.GetStringMapString("current_project")
@@ -55,5 +58,6 @@ var Options = map[OptionKey]Item{
 			sb.WriteString(project["site"])
 
 			return sb.String()
-		}},
+		},
+	},
 }

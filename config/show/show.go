@@ -1,11 +1,13 @@
 package show
 
 import (
-	"github.com/KasumiMercury/cp-cli/config/option"
-	"github.com/spf13/cobra"
-	"golang.org/x/exp/maps"
+	"maps"
+	"slices"
 	"sort"
 	"strings"
+
+	"github.com/KasumiMercury/cp-cli/config/option"
+	"github.com/spf13/cobra"
 )
 
 func NewCmd() *cobra.Command {
@@ -23,7 +25,7 @@ func NewCmd() *cobra.Command {
 
 func show(cmd *cobra.Command) {
 	options := option.Options
-	keys := maps.Keys(options)
+	keys := slices.Collect(maps.Keys(options))
 	sort.SliceStable(keys, func(i, j int) bool {
 		return keys[i] < keys[j]
 	})
