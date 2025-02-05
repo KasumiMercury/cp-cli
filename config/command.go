@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/KasumiMercury/cp-cli/config/set"
 	"github.com/KasumiMercury/cp-cli/config/show"
 	"github.com/spf13/cobra"
 )
@@ -16,6 +17,7 @@ func NewCmd() *cobra.Command {
 	}
 
 	configCmd.AddCommand(show.NewCmd())
+	configCmd.AddCommand(set.NewCmd())
 
 	return configCmd
 }
