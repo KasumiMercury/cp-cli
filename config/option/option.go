@@ -1,6 +1,8 @@
 package option
 
 import (
+	"fmt"
+	"os"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -15,7 +17,8 @@ const (
 )
 
 type Item struct {
-	String func() string
+	String   func() string
+	Validate func(string) error
 }
 
 var Options = map[OptionKey]Item{
@@ -37,6 +40,13 @@ var Options = map[OptionKey]Item{
 			}
 
 			return v
+		},
+		Validate: func(v string) error {
+			if f, err := os.Stat(v); os.IsNotExist(err) || !f.IsDir() {
+				return fmt.Errorf("%s is not a directory", v)
+			}
+
+			return nil
 		},
 	},
 	CurrentProjectKey: {

@@ -31,6 +31,11 @@ func set(args []string) error {
 		return fmt.Errorf("%q is an invalid option", args[0])
 	}
 
+	// TODO: Validateが不要な場合スキップ
+	if option.Options[option.OptionKey(args[0])].Validate(args[1]) != nil {
+		return fmt.Errorf("%q is an invalid option", args[0])
+	}
+
 	if err := writeConfig(args[0], args[1]); err != nil {
 		return err
 	}
