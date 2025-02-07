@@ -27,12 +27,18 @@ func NewCmd() *cobra.Command {
 }
 
 func set(args []string) error {
-	if !validOption(args[0]) {
+	key := option.OptionKey(args[0])
+
+	if !validOption(key) {
 		return fmt.Errorf("%q is an invalid option", args[0])
 	}
 
-	// TODO: Validateが不要な場合スキップ
-	if option.Options[option.OptionKey(args[0])].Validate(args[1]) != nil {
+	validFunc := option.Options[key].Validate
+	if validFunc == nil {
+		return nil
+	}
+
+	if validFunc(args[1]) != nil {
 		return fmt.Errorf("%q is an invalid option", args[0])
 	}
 
@@ -43,9 +49,9 @@ func set(args []string) error {
 	return nil
 }
 
-func validOption(key string) bool {
+func validOption(key option.OptionKey) bool {
 	options := option.Options
-	if _, ok := options[option.OptionKey(key)]; !ok {
+	if _, ok := options[key]; !ok {
 		return false
 	}
 
