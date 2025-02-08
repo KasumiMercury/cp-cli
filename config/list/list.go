@@ -15,7 +15,7 @@ func NewCmd() *cobra.Command {
 		Use:   "list",
 		Short: "list current configuration",
 		Long:  "list current configuration",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(cmd *cobra.Command, _ []string) {
 			show(cmd)
 		},
 	}
@@ -30,14 +30,14 @@ func show(cmd *cobra.Command) {
 		return keys[i] < keys[j]
 	})
 
-	sb := strings.Builder{}
+	strBuilder := strings.Builder{}
 
 	for _, key := range keys {
-		sb.WriteString("\n")
-		sb.WriteString(string(key))
-		sb.WriteString(": ")
-		sb.WriteString(options[key].String())
+		strBuilder.WriteString("\n")
+		strBuilder.WriteString(string(key))
+		strBuilder.WriteString(": ")
+		strBuilder.WriteString(options[key].String())
 	}
 
-	cmd.Println(sb.String())
+	cmd.Println(strBuilder.String())
 }

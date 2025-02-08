@@ -1,32 +1,36 @@
 package option
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"strings"
 
 	"github.com/spf13/viper"
 )
 
-type OptionKey string
+type Key string
 
 const (
-	EditorKey         = OptionKey("editor")
-	ProjectDirKey     = OptionKey("project-dir")
-	CurrentProjectKey = OptionKey("current-project")
+	EditorKey         = Key("editor")
+	ProjectDirKey     = Key("project-dir")
+	CurrentProjectKey = Key("current-project")
 )
+
+const NoConfigMessage = "not configured"
+
+var ErrNotDirectory = errors.New("not a directory")
 
 type Item struct {
 	String   func() string
 	Validate func(string) error
 }
 
-var Options = map[OptionKey]Item{
+var Options = map[Key]Item{
 	EditorKey: {
 		String: func() string {
 			v := viper.GetString("editor")
 			if v == "" {
-				return "not configured"
+				return NoConfigMessage
 			}
 
 			return v
@@ -36,14 +40,14 @@ var Options = map[OptionKey]Item{
 		String: func() string {
 			v := viper.GetString("project_dir")
 			if v == "" {
-				return "not configured"
+				return NoConfigMessage
 			}
 
 			return v
 		},
 		Validate: func(v string) error {
 			if f, err := os.Stat(v); os.IsNotExist(err) || !f.IsDir() {
-				return fmt.Errorf("%s is not a directory", v)
+				return ErrNotDirectory
 			}
 
 			return nil
@@ -53,21 +57,21 @@ var Options = map[OptionKey]Item{
 		String: func() string {
 			project := viper.GetStringMapString("current_project")
 			if project == nil {
-				return "not configured"
+				return NoConfigMessage
 			}
 
-			sb := strings.Builder{}
-			sb.WriteString("\n")
+			strBuilder := strings.Builder{}
+			strBuilder.WriteString("\n")
 
-			sb.WriteString("\t")
-			sb.WriteString("id: ")
-			sb.WriteString(project["id"])
-			sb.WriteString("\n")
-			sb.WriteString("\t")
-			sb.WriteString("site: ")
-			sb.WriteString(project["site"])
+			strBuilder.WriteString("\t")
+			strBuilder.WriteString("id: ")
+			strBuilder.WriteString(project["id"])
+			strBuilder.WriteString("\n")
+			strBuilder.WriteString("\t")
+			strBuilder.WriteString("site: ")
+			strBuilder.WriteString(project["site"])
 
-			return sb.String()
+			return strBuilder.String()
 		},
 	},
 }

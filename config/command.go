@@ -11,7 +11,7 @@ func NewCmd() *cobra.Command {
 		Use:   "config",
 		Short: "Manage configuration",
 		Long:  "Manage configuration",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return nil
 		},
 	}
