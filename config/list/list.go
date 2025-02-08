@@ -1,4 +1,4 @@
-package show
+package list
 
 import (
 	"maps"
@@ -12,9 +12,9 @@ import (
 
 func NewCmd() *cobra.Command {
 	showCmd := &cobra.Command{
-		Use:   "show",
-		Short: "show current configuration",
-		Long:  "show current configuration",
+		Use:   "list",
+		Short: "list current configuration",
+		Long:  "list current configuration",
 		Run: func(cmd *cobra.Command, args []string) {
 			show(cmd)
 		},
