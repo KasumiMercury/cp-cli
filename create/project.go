@@ -25,7 +25,7 @@ func ProjectDir(path string, problemID string) error {
 
 	err = cmd.Run()
 	if err != nil {
-		return fmt.Errorf("%w(%s): %w", ErrFailedCreateProject, "workspace", err)
+		return fmt.Errorf("%w(%s): %w", ErrFailedCreateProject, "module init", err)
 	}
 
 	if err := projectMain(path); err != nil {
