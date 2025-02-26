@@ -3,8 +3,8 @@ package create
 import (
 	"errors"
 	"fmt"
-	"github.com/KasumiMercury/cp-cli/config"
 
+	"github.com/KasumiMercury/cp-cli/config"
 	"github.com/KasumiMercury/cp-cli/editor"
 	"github.com/KasumiMercury/cp-cli/parse"
 	"github.com/KasumiMercury/cp-cli/path"
