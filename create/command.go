@@ -3,6 +3,7 @@ package create
 import (
 	"errors"
 	"fmt"
+	"github.com/KasumiMercury/cp-cli/config"
 
 	"github.com/KasumiMercury/cp-cli/editor"
 	"github.com/KasumiMercury/cp-cli/parse"
@@ -51,10 +52,9 @@ func createCmd(cmd *cobra.Command, targetURL string) error {
 
 	cmd.Printf("detected Project ID: %s\n", pID)
 
-	// TODO: use config
-	projectRoot := "./project"
+	workspace := config.GetWorkspacePath()
 
-	projectPath, err := path.ProjectDirPath(projectRoot, pID)
+	projectPath, err := path.ProjectDirPath(workspace, pID)
 	if err != nil {
 		return fmt.Errorf("failed to get project dir: %w", err)
 	}
