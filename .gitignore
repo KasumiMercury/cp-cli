@@ -31,4 +31,4 @@ go.work.sum
 .cp-cli.yaml
 
 # for dev
-project/
+workspace/
