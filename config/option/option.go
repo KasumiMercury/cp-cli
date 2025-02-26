@@ -12,7 +12,7 @@ type Key string
 
 const (
 	EditorKey         = Key("editor")
-	ProjectDirKey     = Key("project-dir")
+	WorkspaceKey      = Key("workspace")
 	CurrentProjectKey = Key("current-project")
 )
 
@@ -36,7 +36,7 @@ var Options = map[Key]Item{
 			return v
 		},
 	},
-	ProjectDirKey: {
+	WorkspaceKey: {
 		String: func() string {
 			v := viper.GetString("project_dir")
 			if v == "" {
