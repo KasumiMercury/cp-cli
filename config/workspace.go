@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"log"
 	"os"
 )
 
@@ -16,8 +17,7 @@ func init() {
 
 	currentAbsolutePath, err := os.Getwd()
 	if err != nil {
-		// TODO: improve error handling
-		panic(err)
+		log.Fatal("Unable to determine current working directory")
 	}
 
 	workspace = currentAbsolutePath + "/workspace"
