@@ -2,13 +2,20 @@ package option
 
 import (
 	"errors"
+	"github.com/spf13/viper"
 	"os"
 	"strings"
-
-	"github.com/spf13/viper"
 )
 
 type Key string
+
+var (
+	ErrInvalidOption = errors.New("invalid option")
+	ErrKeyNotFound   = errors.New("key not found")
+	ErrInvalidKey    = errors.New("invalid key")
+)
+
+const NoConfigMessage = "not configured"
 
 const (
 	EditorKey         = Key("editor")
@@ -16,9 +23,78 @@ const (
 	CurrentProjectKey = Key("current-project")
 )
 
-const NoConfigMessage = "not configured"
-
 var ErrNotDirectory = errors.New("not a directory")
+
+type Option struct {
+	key       string
+	viperKey  string
+	getString func() string
+	validate  func(string) error
+}
+
+func (o *Option) Key() string {
+	return o.key
+}
+
+func (o *Option) String() string {
+	return o.getString()
+}
+
+func (o *Option) Validate(v string) error {
+	if o.validate == nil {
+		return nil
+	}
+
+	return o.validate(v)
+}
+
+func (o *Option) SetValue(v string) error {
+	viper.Set(o.viperKey, v)
+	return viper.SafeWriteConfig()
+}
+
+type Builder struct {
+	option Option
+}
+
+func NewOptionBuilder(key string) *Builder {
+	return &Builder{
+		option: Option{
+			key:      key,
+			viperKey: key,
+		},
+	}
+}
+
+func (b *Builder) WithViperKey(v string) *Builder {
+	b.option.viperKey = v
+	return b
+}
+
+func (b *Builder) WithGetString(f func() string) *Builder {
+	b.option.getString = f
+	return b
+}
+
+func (b *Builder) WithValidate(f func(string) error) *Builder {
+	b.option.validate = f
+	return b
+}
+
+func (b *Builder) Build() Option {
+	if b.option.getString == nil {
+		b.option.getString = func() string {
+			v := viper.GetString(b.option.viperKey)
+			if v == "" {
+				return NoConfigMessage
+			}
+
+			return v
+		}
+	}
+
+	return b.option
+}
 
 type Item struct {
 	String   func() string
