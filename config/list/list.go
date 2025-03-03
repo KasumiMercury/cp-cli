@@ -1,8 +1,6 @@
 package list
 
 import (
-	"maps"
-	"slices"
 	"sort"
 	"strings"
 
@@ -24,19 +22,32 @@ func NewCmd() *cobra.Command {
 }
 
 func show(cmd *cobra.Command) {
-	options := option.Options
-	keys := slices.Collect(maps.Keys(options))
-	sort.SliceStable(keys, func(i, j int) bool {
-		return keys[i] < keys[j]
-	})
+	registry := option.NewRegistry()
+	options := registry.GetAll()
+
+	// sort options by key
+	// to make the output more predictable
+	keys := make([]string, 0, len(options))
+
+	for k := range options {
+		keys = append(keys, k)
+	}
+
+	sort.Strings(keys)
 
 	strBuilder := strings.Builder{}
+	strBuilder.Grow(len(options) * 24)
 
-	for _, key := range keys {
-		strBuilder.WriteString("\n")
-		strBuilder.WriteString(string(key))
+	for i, key := range keys {
+		opt := options[key]
+
+		if i > 0 {
+			strBuilder.WriteString("\n")
+		}
+
+		strBuilder.WriteString(key)
 		strBuilder.WriteString(": ")
-		strBuilder.WriteString(options[key].String())
+		strBuilder.WriteString(opt.String())
 	}
 
 	cmd.Println(strBuilder.String())

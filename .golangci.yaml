@@ -26,6 +26,7 @@ linters-settings:
   mnd:
     ignored-functions:
       - 'cobra.ExactArgs'
+      - '\.Grow'  # strings.Builder.Grow
 
 issues:
   exclude-rules:

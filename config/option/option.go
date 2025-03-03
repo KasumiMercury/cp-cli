@@ -2,76 +2,149 @@ package option
 
 import (
 	"errors"
+	"fmt"
 	"os"
-	"strings"
 
 	"github.com/spf13/viper"
 )
 
 type Key string
 
-const (
-	EditorKey         = Key("editor")
-	WorkspaceKey      = Key("workspace")
-	CurrentProjectKey = Key("current-project")
+var (
+	ErrKeyNotFound  = errors.New("key not found")
+	ErrInvalidValue = errors.New("invalid value")
+	ErrWriteConfig  = errors.New("failed to write config")
 )
 
 const NoConfigMessage = "not configured"
 
 var ErrNotDirectory = errors.New("not a directory")
 
-type Item struct {
-	String   func() string
-	Validate func(string) error
+type Option struct {
+	key       string
+	viperKey  string
+	getString func() string
+	validate  func(string) error
 }
 
-var Options = map[Key]Item{
-	EditorKey: {
-		String: func() string {
-			v := viper.GetString("editor")
+func (o *Option) Key() string {
+	return o.key
+}
+
+func (o *Option) String() string {
+	return o.getString()
+}
+
+func (o *Option) Validate(v string) error {
+	if o.validate == nil {
+		return nil
+	}
+
+	if err := o.validate(v); err != nil {
+		return fmt.Errorf("%w: %w", ErrInvalidValue, err)
+	}
+
+	return nil
+}
+
+func (o *Option) SetValue(v string) error {
+	viper.Set(o.viperKey, v)
+
+	if err := viper.WriteConfig(); err != nil {
+		return fmt.Errorf("%w: %w", ErrWriteConfig, err)
+	}
+
+	return nil
+}
+
+type Builder struct {
+	option Option
+}
+
+func NewOptionBuilder(key string) *Builder {
+	return &Builder{
+		option: Option{
+			key:      key,
+			viperKey: key,
+		},
+	}
+}
+
+func (b *Builder) WithViperKey(v string) *Builder {
+	b.option.viperKey = v
+
+	return b
+}
+
+func (b *Builder) WithGetString(f func() string) *Builder {
+	b.option.getString = f
+
+	return b
+}
+
+func (b *Builder) WithValidate(f func(string) error) *Builder {
+	b.option.validate = f
+
+	return b
+}
+
+func (b *Builder) Build() Option {
+	if b.option.getString == nil {
+		b.option.getString = func() string {
+			v := viper.GetString(b.option.viperKey)
 			if v == "" {
 				return NoConfigMessage
 			}
 
 			return v
-		},
-	},
-	WorkspaceKey: {
-		String: func() string {
-			v := viper.GetString("project_dir")
-			if v == "" {
-				return NoConfigMessage
-			}
+		}
+	}
 
-			return v
-		},
-		Validate: func(v string) error {
-			if f, err := os.Stat(v); os.IsNotExist(err) || !f.IsDir() {
+	return b.option
+}
+
+type Registry struct {
+	options map[string]Option
+}
+
+func NewRegistry() *Registry {
+	registry := &Registry{
+		options: make(map[string]Option),
+	}
+
+	registry.registerAll()
+
+	return registry
+}
+
+func (r *Registry) registerAll() {
+	editorOption := NewOptionBuilder("editor").Build()
+	r.register(editorOption)
+
+	workspaceOption := NewOptionBuilder("workspace").
+		WithValidate(func(s string) error {
+			if f, err := os.Stat(s); os.IsNotExist(err) || !f.IsDir() {
 				return ErrNotDirectory
 			}
 
 			return nil
-		},
-	},
-	CurrentProjectKey: {
-		String: func() string {
-			project := viper.GetStringMapString("current_project")
-			if project == nil {
-				return NoConfigMessage
-			}
+		}).Build()
+	r.register(workspaceOption)
+}
 
-			strBuilder := strings.Builder{}
-			strBuilder.WriteString("\n")
+func (r *Registry) register(option Option) {
+	r.options[option.Key()] = option
+}
 
-			strBuilder.WriteString("\t")
-			strBuilder.WriteString("id: ")
-			strBuilder.WriteString(project["id"])
-			strBuilder.WriteString("\n")
-			strBuilder.WriteString("\t")
-			strBuilder.WriteString("site: ")
-			strBuilder.WriteString(project["site"])
+func (r *Registry) Get(key string) (Option, error) {
+	option, ok := r.options[key]
+	if !ok {
+		return Option{}, fmt.Errorf("%w: %s", ErrKeyNotFound, key)
+	}
 
-			return strBuilder.String()
-		},
-	},
+	return option, nil
+}
+
+func (r *Registry) GetAll() map[string]Option {
+	return r.options
 }
