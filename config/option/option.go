@@ -12,7 +12,7 @@ type Key string
 var (
 	ErrInvalidOption = errors.New("invalid option")
 	ErrKeyNotFound   = errors.New("key not found")
-	ErrInvalidKey    = errors.New("invalid key")
+	ErrInvalidValue  = errors.New("invalid value")
 )
 
 const NoConfigMessage = "not configured"
@@ -39,7 +39,11 @@ func (o *Option) Validate(v string) error {
 		return nil
 	}
 
-	return o.validate(v)
+	if err := o.validate(v); err != nil {
+		return fmt.Errorf("%w: %s", ErrInvalidValue, err)
+	}
+
+	return nil
 }
 
 func (o *Option) SetValue(v string) error {
