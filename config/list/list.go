@@ -1,10 +1,11 @@
 package list
 
 import (
-	"github.com/KasumiMercury/cp-cli/config/option"
-	"github.com/spf13/cobra"
 	"sort"
 	"strings"
+
+	"github.com/KasumiMercury/cp-cli/config/option"
+	"github.com/spf13/cobra"
 )
 
 func NewCmd() *cobra.Command {
@@ -37,14 +38,14 @@ func show(cmd *cobra.Command) {
 	strBuilder := strings.Builder{}
 	strBuilder.Grow(len(options) * 24)
 
-	for i, k := range keys {
-		opt := options[k]
+	for i, key := range keys {
+		opt := options[key]
 
 		if i > 0 {
 			strBuilder.WriteString("\n")
 		}
 
-		strBuilder.WriteString(k)
+		strBuilder.WriteString(key)
 		strBuilder.WriteString(": ")
 		strBuilder.WriteString(opt.String())
 	}

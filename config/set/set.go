@@ -1,6 +1,9 @@
 package set
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/KasumiMercury/cp-cli/config/option"
 	"github.com/spf13/cobra"
 )
@@ -23,17 +26,26 @@ func NewCmd() *cobra.Command {
 	return setCmd
 }
 
+var (
+	ErrInvalidOption = errors.New("invalid option")
+	ErrFailedConfig  = errors.New("failed to configure")
+)
+
 func set(args []string) error {
 	registry := option.NewRegistry()
 
 	opt, err := registry.Get(args[0])
 	if err != nil {
-		return err
+		return fmt.Errorf("%w: %w", ErrInvalidOption, err)
 	}
 
 	if err := opt.Validate(args[1]); err != nil {
-		return err
+		return fmt.Errorf("%w: %w", ErrInvalidOption, err)
 	}
 
-	return opt.SetValue(args[1])
+	if err := opt.SetValue(args[1]); err != nil {
+		return fmt.Errorf("%w: %w", ErrFailedConfig, err)
+	}
+
+	return nil
 }
