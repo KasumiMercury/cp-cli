@@ -17,12 +17,6 @@ var (
 
 const NoConfigMessage = "not configured"
 
-const (
-	EditorKey         = Key("editor")
-	WorkspaceKey      = Key("workspace")
-	CurrentProjectKey = Key("current-project")
-)
-
 var ErrNotDirectory = errors.New("not a directory")
 
 type Option struct {
