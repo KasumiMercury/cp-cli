@@ -51,7 +51,7 @@ func (o *Option) Validate(v string) error {
 
 func (o *Option) SetValue(v string) error {
 	viper.Set(o.viperKey, v)
-	return viper.SafeWriteConfig()
+	return viper.WriteConfig()
 }
 
 type Builder struct {
