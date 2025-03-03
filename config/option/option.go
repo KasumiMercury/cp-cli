@@ -2,6 +2,7 @@ package option
 
 import (
 	"errors"
+	"fmt"
 	"github.com/spf13/viper"
 	"os"
 	"strings"
@@ -94,6 +95,52 @@ func (b *Builder) Build() Option {
 	}
 
 	return b.option
+}
+
+type Registry struct {
+	options map[string]Option
+}
+
+func NewRegistry() *Registry {
+	registry := &Registry{
+		options: make(map[string]Option),
+	}
+
+	registry.registerAll()
+
+	return registry
+}
+
+func (r *Registry) registerAll() {
+	editorOption := NewOptionBuilder("editor").Build()
+	r.register(editorOption)
+
+	workspaceOption := NewOptionBuilder("workspace").
+		WithValidate(func(s string) error {
+			if f, err := os.Stat(s); os.IsNotExist(err) || !f.IsDir() {
+				return ErrNotDirectory
+			}
+
+			return nil
+		}).Build()
+	r.register(workspaceOption)
+}
+
+func (r *Registry) register(option Option) {
+	r.options[option.Key()] = option
+}
+
+func (r *Registry) Get(key string) (Option, error) {
+	option, ok := r.options[key]
+	if !ok {
+		return Option{}, fmt.Errorf("%w: %w: %s", ErrInvalidOption, ErrKeyNotFound, key)
+	}
+
+	return option, nil
+}
+
+func (r *Registry) GetAll() map[string]Option {
+	return r.options
 }
 
 type Item struct {
