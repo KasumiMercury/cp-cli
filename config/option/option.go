@@ -107,6 +107,11 @@ type Registry struct {
 	options map[string]Option
 }
 
+const (
+	EditorKey    = "editor"
+	WorkspaceKey = "workspace"
+)
+
 func NewRegistry() *Registry {
 	registry := &Registry{
 		options: make(map[string]Option),
@@ -118,10 +123,10 @@ func NewRegistry() *Registry {
 }
 
 func (r *Registry) registerAll() {
-	editorOption := NewOptionBuilder("editor").Build()
+	editorOption := NewOptionBuilder(EditorKey).Build()
 	r.register(editorOption)
 
-	workspaceOption := NewOptionBuilder("workspace").
+	workspaceOption := NewOptionBuilder(WorkspaceKey).
 		WithValidate(func(s string) error {
 			if f, err := os.Stat(s); os.IsNotExist(err) || !f.IsDir() {
 				return ErrNotDirectory

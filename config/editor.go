@@ -1,16 +1,16 @@
 package config
 
 import (
+	"github.com/KasumiMercury/cp-cli/config/option"
+	"github.com/spf13/viper"
 	"os"
 	"runtime"
-
-	"github.com/spf13/viper"
 )
 
 var defaultEditor = ""
 
 func init() {
-	if c := viper.GetString("EDITOR"); c != "" {
+	if c := viper.GetString(option.EditorKey); c != "" {
 		defaultEditor = c
 
 		return

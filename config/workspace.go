@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/KasumiMercury/cp-cli/config/option"
 	"log"
 	"os"
 
@@ -10,7 +11,7 @@ import (
 var workspace = ""
 
 func init() {
-	if c := viper.GetString("workspace"); c != "" {
+	if c := viper.GetString(option.WorkspaceKey); c != "" {
 		workspace = c
 
 		return
