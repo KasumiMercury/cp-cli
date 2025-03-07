@@ -20,3 +20,9 @@ func MemoryCurrentProject(pID string, site string) error {
 
 	return nil
 }
+
+func GetCurrentProject() (string, string) {
+	current := viper.GetStringMapString("current_project")
+
+	return current["id"], current["site"]
+}
